@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product List — Dynamic Filter</title>
+  <style>
+    :root { --border:#cfcfcf; --muted:#666; }
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+    .card { border: 2px solid var(--border); border-radius: 6px; padding: 16px; max-width: 820px; }
+    .title { font-size: 1.6rem; font-weight: 800; margin-bottom: 14px; }
+    .controls { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    label { font-weight: 600; color: #222; }
+    select { padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 6px; }
+    .list { display: grid; gap: 12px; }
+    .item { padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 6px; background: #fafafa; }
+    .empty { color: var(--muted); font-style: italic; padding: 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="title">Product List</div>
+
+    <div class="controls">
+      <label for="category">Filter by Category:</label>
+      <select id="category">
+        <option value="all">All</option>
+        <option value="clothing">Clothing</option>
+        <option value="electronics">Electronics</option>
+        <option value="books">Books</option>
+      </select>
+    </div>
+
+    <div id="productList" class="list">
+      <!-- Clothing -->
+      <div class="item" data-category="clothing">T‑Shirt</div>
+      <div class="item" data-category="clothing">Jeans</div>
+
+      <!-- Electronics -->
+      <div class="item" data-category="electronics">Headphones</div>
+      <div class="item" data-category="electronics">Smartphone</div>
+
+      <!-- Books -->
+      <div class="item" data-category="books">Novel</div>
+      <div class="item" data-category="books">Cookbook</div>
+    </div>
+
+    <div id="emptyState" class="empty" style="display:none;">No products found for this category.</div>
+  </div>
+
+  <script>
+    const select = document.getElementById('category');
+    const list = document.getElementById('productList');
+    const items = Array.from(list.querySelectorAll('.item'));
+    const empty = document.getElementById('emptyState');
+
+    function applyFilter() {
+      const value = select.value; // 'all' | 'clothing' | 'electronics' | 'books'
+      let visibleCount = 0;
+
+      items.forEach(el => {
+        const match = value === 'all' || el.dataset.category === value;
+        el.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+
+      // Show empty state if nothing matches
+      empty.style.display = visibleCount ? 'none' : '';
+    }
+
+    // Initialize
+    applyFilter();
+    // Update on change
+    select.addEventListener('change', applyFilter);
+  </script>
+</body>
+</html>
